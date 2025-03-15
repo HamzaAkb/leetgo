@@ -1,49 +1,32 @@
 import (
-    "sort"
-    "math"
+	"math"
+	"sort"
 )
 
 func findClosestElements(arr []int, k int, x int) []int {
 	j := sort.SearchInts(arr, x)
-	left, right, length, i := j-1, j, len(arr), 0
+	left, right := j-1, j
+	n := len(arr)
 
 	if right == 0 {
 		return arr[:k]
 	}
-
-	if right == length {
-		return arr[length-k:]
+	if right == n {
+		return arr[n-k:]
 	}
 
-	var closest []int
+	closest := make([]int, 0, k)
 
-	for i < k && left >= 0 && right < len(arr) {
-		leftDist := math.Abs(float64(arr[left] - x))
-		rightDist := math.Abs(float64(arr[right] - x))
-
-		if leftDist <= rightDist {
+	for len(closest) < k {
+		if left >= 0 && (right >= n || math.Abs(float64(arr[left]-x)) <= math.Abs(float64(arr[right]-x))) {
 			closest = append(closest, arr[left])
 			left--
-		} else {
+		} else if right < n {
 			closest = append(closest, arr[right])
 			right++
 		}
-		i++
-	}
-
-	for i < k && left >= 0 {
-		closest = append(closest, arr[left])
-		left--
-		i++
-	}
-
-	for i < k && right < len(arr) {
-		closest = append(closest, arr[right])
-		right++
-		i++
 	}
 
 	sort.Ints(closest)
-
 	return closest
 }
