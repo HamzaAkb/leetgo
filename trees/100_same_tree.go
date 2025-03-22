@@ -7,17 +7,24 @@
  * }
  */
 func isSameTree(p *TreeNode, q *TreeNode) bool {
-    return traverse(p, q)
-}
-
-func traverse(p *TreeNode, q *TreeNode) bool {
     if p == nil && q == nil {
         return true
     }
 
-    if (p == nil || q == nil) || (p.Val != q.Val) {
+    if p == nil || q == nil {
         return false
-    }   
+    }
 
-    return traverse(p.Left, q.Left) && traverse(p.Right, q.Right)
+    if p.Val != q.Val {
+        return false
+    }
+
+    leftTree := isSameTree(p.Left, q.Left)
+    rightTree := isSameTree(p.Right, q.Right)
+
+    if !leftTree || !rightTree {
+        return false
+    }
+
+    return true
 }
