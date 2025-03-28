@@ -7,29 +7,37 @@
  * }
  */
 func isBalanced(root *TreeNode) bool {
-    _, result := checkBalance(root)
-    return result
+    res := traverse(root)
+
+    if res == -1 {
+        return false
+    }
+
+    return true
 }
 
-func checkBalance(root *TreeNode) (int, bool){
+func traverse(root *TreeNode) int {
     if root == nil {
-        return 0, true
+        return 0
     }
 
-    leftHeight, leftBalanced := checkBalance(root.Left)
-    rightHeight, rightBalanced := checkBalance(root.Right)
+    lh := traverse(root.Left)
+    rh := traverse(root.Right)
 
-    if !leftBalanced || !rightBalanced {
-        return -1, false
+    if math.Abs(float64(lh) - float64(rh)) > 1 {
+        return -1
     }
 
-    if int(math.Abs(float64(leftHeight) - float64(rightHeight))) > 1 {
-        return -1, false
+    if lh == -1 || rh == -1 {
+        return -1
     }
 
-    if leftHeight > rightHeight {
-        return 1 + leftHeight, true
-    }
+    return 1 + max(lh, rh)
+}
 
-    return 1 + rightHeight, true
+func max (a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
 }
