@@ -7,48 +7,23 @@
  * }
  */
 func isSubtree(root *TreeNode, subRoot *TreeNode) bool {
-    var queue []*TreeNode
-    queue = append(queue, root)
+    var tree string
+    serialize(root, &tree)
 
-    for len(queue) > 0 {
-        top := queue[0]
-        queue = queue[1:]
+    var subTree string
+    serialize(subRoot, &subTree)
 
-        if checkSubtree(top, subRoot) {
-            return true
-        }
-
-        if top.Left != nil {
-            queue = append(queue, top.Left)
-        }
-
-        if top.Right != nil {
-            queue = append(queue, top.Right)
-        }
-    }
-
-    return false
+    return strings.Contains(tree, subTree)
 }
 
-func checkSubtree(p *TreeNode, q *TreeNode) bool {
-    if p == nil && q == nil {
-        return true
+func serialize(node *TreeNode, str *string) {
+    if node == nil {
+        *str += ",#"
+        return
     }
 
-    if p == nil || q == nil {
-        return false
-    }
+    *str += "," + strconv.Itoa(node.Val)
 
-    if p.Val != q.Val {
-        return false
-    }
-
-    leftTree := checkSubtree(p.Left, q.Left)
-    rightTree := checkSubtree(p.Right, q.Right)
-
-    if !leftTree || !rightTree {
-        return false
-    }
-
-    return true
+    serialize(node.Left, str)
+    serialize(node.Right, str)
 }
