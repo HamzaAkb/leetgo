@@ -1,0 +1,31 @@
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func findDuplicateSubtrees(root *TreeNode) []*TreeNode {
+    seen := map[string]int{}
+    var result []*TreeNode
+    traverse(root, &seen, &result)
+    return result
+}
+
+func traverse(node *TreeNode, seen *map[string]int, result *[]*TreeNode) string {
+    if node == nil {
+        return "#"
+    }
+
+    left := traverse(node.Left, seen, result)
+    right := traverse(node.Right, seen, result)
+    currStr := fmt.Sprintf("%d,%s,%s", node.Val, left, right)
+
+    (*seen)[currStr]++
+    if (*seen)[currStr] == 2 {
+        *result = append(*result, node)
+    }
+
+    return currStr
+}
